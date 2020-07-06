@@ -8,13 +8,15 @@ https://github.com/awentzonline/image-analogies/releases/download/v0.0.5/vgg16_w
 and make sure the parameter `vgg_weights` matches the location of the file.
 '''
 import time
+import sys
+sys.path.append('../')
 
-import image_analogy.argparser
-import image_analogy.main
+from image_analogy import argparser
+from image_analogy import main
 
 
 if __name__ == '__main__':
-    args = image_analogy.argparser.parse_args()
+    args = argparser.parse_args()
     if args:
         if args.match_model == 'patchmatch':
             print('Using PatchMatch model')
@@ -24,7 +26,7 @@ if __name__ == '__main__':
             from image_analogy.models.analogy import AnalogyModel as model_class
         start_time = time.time()
         try:
-            image_analogy.main.main(args, model_class)
+            main.main(args, model_class)
         except KeyboardInterrupt:
             print('Shutting down...')
         print('Done after {:.2f} seconds'.format(time.time() - start_time))

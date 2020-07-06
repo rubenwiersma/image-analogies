@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.misc import imread, imresize
+from PIL import Image
+from imageio import imread
 
 from . import vgg16
 
@@ -11,7 +12,7 @@ def load_image(image_path):
 
 # util function to open, resize and format pictures into appropriate tensors
 def preprocess_image(x, img_width, img_height):
-    img = imresize(x, (img_height, img_width), interp='bicubic').astype(np.float32)
+    img = np.array(Image.fromarray(x).resize((img_height, img_width))).astype(np.float32)
     img = vgg16.img_to_vgg(img)
     img = np.expand_dims(img, axis=0)
     return img

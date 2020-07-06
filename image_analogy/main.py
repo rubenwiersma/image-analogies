@@ -4,7 +4,7 @@ import time
 import numpy as np
 import scipy.ndimage
 from keras import backend as K
-from scipy.misc import imsave
+from imageio import imwrite
 
 from image_analogy import img_utils, vgg16
 from image_analogy.optimizer import Optimizer
@@ -12,7 +12,7 @@ from image_analogy.optimizer import Optimizer
 
 def main(args, model_class):
     '''The main loop which does the things.'''
-    K.set_image_dim_ordering('th')
+    K.set_image_data_format('channels_first')
     # calculate scales
     if args.num_scales > 1:
         step_scale_factor = (1 - args.min_scale) / (args.num_scales - 1)
@@ -42,7 +42,7 @@ def main(args, model_class):
         img_height = int(round(full_img_height * scale_factor))
         # prepare the current optimizer state
         if x is None:  # we need to create an initial state
-            x = np.random.uniform(0, 255, (img_height, img_width, 3)).astype(np.float32)
+            x = np.random.uniform(0, 255, (3, img_height, img_width)).astype(np.float32)
             x = vgg16.img_to_vgg(x)
         else:  # resize the last state
             zoom_ratio = img_width / float(x.shape[-1])
@@ -96,7 +96,7 @@ def main(args, model_class):
                 out_resize_shape = None
             img = img_utils.deprocess_image(np.copy(x), contrast_percent=args.contrast_percent,resize=out_resize_shape)
             fname = args.result_prefix + '_at_iteration_{}_{}.png'.format(scale_i, i)
-            imsave(fname, img)
+            imwrite(fname, img)
             end_time = time.time()
             print('Image saved as {}'.format(fname))
             print('Iteration completed in {:.2f} seconds'.format(end_time - start_time,))

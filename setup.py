@@ -23,5 +23,6 @@ setup(
         'scikit-learn>=0.17.0',
         'six>=1.10.0',
         'Theano>=0.8.2',
+        'imageio',
     ]
 )

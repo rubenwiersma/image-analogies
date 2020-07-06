@@ -34,7 +34,7 @@ class BaseModel(object):
         '''Create an expression for the loss as a function of the image inputs.'''
         loss = K.variable(0.0)
         # get the symbolic outputs of each "key" layer (we gave them unique names).
-        loss += self.args.tv_weight * total_variation_loss(self.net_input, *b_image.shape[2:])
+        loss = loss + self.args.tv_weight * total_variation_loss(self.net_input, *b_image.shape[2:])
         return loss
 
     def precompute_static_features(self, a_image, ap_image, b_image):
